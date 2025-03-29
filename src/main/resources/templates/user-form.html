@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Bruger Liste</title>
 </head>
 <body>
-$END$
+<h1>Bruger Liste</h1>
+<a href="/users/create">Opret ny bruger</a>
+<ul>
+    <li th:each="user : ${users}">
+    <p> Navn: <span th:text="${user.username}"></span></p>
+    <a th:href="@{'/users/edit/' + ${user.id}}">Rediger bruger</a>
+    <a th:href="@{'/users/delete/' + ${user.id}}">Slet bruger</a>
+    </li>
+</ul>
 </body>
 </html>

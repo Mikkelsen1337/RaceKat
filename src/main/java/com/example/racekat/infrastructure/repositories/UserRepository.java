@@ -1,8 +1,10 @@
 package com.example.racekat.infrastructure.repositories;
 
-public class UserRepository {
+import com.example.racekat.domain.models.User;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public static void main(String[] args) {
-}
+import java.util.Optional;
 
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
 }

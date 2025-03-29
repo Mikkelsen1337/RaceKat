@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Kæledyr</title>
 </head>
 <body>
-$END$
+<h1>Kæledyr</h1>
+<ul>
+    <li th:each="pet : ${pets}">
+    [[${pet.name}]] ([[${pet.breed}]]) - [[${pet.age}]] år
+    <a th:href="@{/pets/edit/{id}(id=${pet.id})}">rediger</a>
+    <a th:href="@{/pets/delete/{id}(id=${pet.id})}">slet</a>
+    </li>
+</ul>
+<a th:href="/pets/add">Tilføj kæledyr</a>
 </body>
 </html>
