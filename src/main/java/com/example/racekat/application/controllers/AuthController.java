@@ -1,8 +1,6 @@
 package com.example.racekat.application.controllers;
 
 import com.example.racekat.application.services.UserService;
-import com.example.racekat.infrastructure.repositories.UserRepository;
-import jakarta.persistence.Entity;
 import com.example.racekat.domain.models.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
