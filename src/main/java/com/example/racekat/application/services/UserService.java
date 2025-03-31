@@ -19,31 +19,21 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    // Henter alle brugere
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    // Opretter en ny bruger
-    public void createUser(User user) {
-        userRepository.save(user);
-    }
 
-    // Henter en bruger ud fra ID
     public User getUserByid(Long id) {
         return userRepository.findById(id).orElse(null);
     }
 
-    // Opdaterer en eksisterende bruger
-    public void updateUser(Long id, User user) {
-        User existingUser = userRepository.findById(id).orElse(null);
-        if(existingUser != null) {
-            existingUser.setUsername(user.getUsername());
-            existingUser.setPassword(user.getPassword());
-            existingUser.setEmail(user.getEmail());
-            userRepository.save(existingUser);
-        }
+
+    public void createOrUpdateUser(User user) {
+        userRepository.save(user); // Spring JPA håndterer automatisk create vs. update
     }
+
 
     // Sletter en bruger
     public void deleteUser(Long id) {

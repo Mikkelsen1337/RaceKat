@@ -15,6 +15,7 @@ public class UserController {
 
 private final UserService userService;
 public UserController(UserService userService) {
+
     this.userService = userService;
 }
 
@@ -24,27 +25,16 @@ public UserController(UserService userService) {
     return "user-list";
 }
 
-@GetMapping("/create")
-    public String showCreateForm(Model model) {
-    model.addAttribute("user", new User());
+@GetMapping({"/form", "/form{id}"})
+    public String showCreateForm(@PathVariable(required = false) Long id, Model model) {
+   User user = (id != null) ? userService.getUserByid(id) : new User();
+    model.addAttribute("user",  user);
     return "user-form";
 }
 
-@PostMapping("/create")
-    public String createUser(@ModelAttribute User user){
-    userService.createUser(user);
-    return "redirect:/users";
-}
-
-@GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model){
-    model.addAttribute("user", userService.getUserByid(id));
-    return "user-form";
-}
-
-@PostMapping("/edit/{id}")
-    public String updateUser(@PathVariable Long id, @ModelAttribute User user){
-    userService.updateUser(id, user);
+@PostMapping("/save")
+    public String saveUser(@ModelAttribute User user){
+    userService.createOrUpdateUser(user);
     return "redirect:/users";
 }
 
@@ -53,6 +43,5 @@ public UserController(UserService userService) {
     userService.deleteUser(id);
     return "redirect:/users";
 }
-
 
 }

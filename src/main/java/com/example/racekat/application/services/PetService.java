@@ -11,20 +11,23 @@ public class PetService {
 
     private final PetRepository petRepository;
     public PetService(PetRepository petRepository) {
+
         this.petRepository = petRepository;
     }
 
     public List<Pet> getAllPets() {
+
         return petRepository.findAll();
     }
-    public List<Pet> getPetsByUserId(Long userId) {
-        return petRepository.findByOwnerId(userId);
+    public List<Pet> getPetsByOwner(Long ownerId) {
+        return petRepository.findByOwnerId(ownerId);
     }
     public Pet getPetById(Long id) {
+
         return petRepository.findById(id).orElse(null);
     }
-    public Pet savePet(Pet pet){
-        return petRepository.save(pet);
+    public void createOrUpdatePet(Pet pet){
+        petRepository.save(pet);
     }
     public void deletePet(Long id) {
         petRepository.deleteById(id);

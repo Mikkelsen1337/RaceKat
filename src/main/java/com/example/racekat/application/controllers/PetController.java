@@ -2,11 +2,8 @@ package com.example.racekat.application.controllers;
 
 import com.example.racekat.application.services.PetService;
 import com.example.racekat.infrastructure.repositories.UserRepository;
-import com.example.racekat.application.services.UserService;
 import com.example.racekat.domain.models.Pet;
 import com.example.racekat.domain.models.User;
-import com.example.racekat.infrastructure.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -19,59 +16,42 @@ import java.util.Optional;
 @RequestMapping("/pets")
 public class PetController {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PetService petService;
 
-    public PetController(PetService petService) {
+    public PetController(PetService petService, UserRepository userRepository) {
         this.petService = petService;
+        this.userRepository = userRepository;
     }
 
-    @GetMapping("/pets")
+    @GetMapping
     public String getAllPets(Model model) {
-        model.addAttribute("pets", petService.getAllPets());
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if(userOptional.isPresent()) {
+            model.addAttribute("pets", petService.getPetsByOwner(userOptional.get().getId()));
+        } else {
+            model.addAttribute("pets", null);
+        }
         return "pets";
     }
 
-    @GetMapping("/pets/add")
-    public String showAddPetForm(Model model) {
-        model.addAttribute("pet", new Pet());
+    @GetMapping({"/form", "/form/{id}"})
+    public String showPetForm(@PathVariable(required = false) Long id, Model model) {
+       Pet pet = (id != null) ? petService.getPetById(id) : new Pet();
+       model.addAttribute("pet", pet);
         return "add-pet";
     }
 
-    @PostMapping("/pets/add")
-    public String addPet(@ModelAttribute Pet pet) {
+    @PostMapping("/save")
+    public String savePet(@ModelAttribute Pet pet) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String email = auth.getName();
         Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isPresent()) {
-            pet.setOwner(userOptional.get());
-            petService.savePet(pet);
-        }
+       userOptional.ifPresent(pet::setOwner);
+       petService.createOrUpdatePet(pet);
         return "redirect:/pets";
     }
-
-    @GetMapping("/edit/{id}")
-    public String showEditPetForm(@PathVariable Long id, Model model) {
-        model.addAttribute("pet", petService.getPetById(id));
-        return "pets/edit-pet";
-    }
-
-    @PostMapping("/edit/{id}")
-    public String editPet(@ModelAttribute Pet pet, @RequestParam Long id, Model model) {
-        pet.setId(id);
-        petService.savePet(pet);
-        return "redirect:/pets";
-    }
-
-    @GetMapping("/delete/{id}")
-    public String deletePet(@PathVariable Long id) {
-        petService.deletePet(id);
-        return "redirect:/pets";
-    }
-
-
-
 }
 
 
