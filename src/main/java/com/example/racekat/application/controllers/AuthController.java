@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class AuthController {
 
-
-
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 

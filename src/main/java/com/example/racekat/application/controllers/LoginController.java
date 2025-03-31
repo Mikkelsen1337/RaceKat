@@ -30,7 +30,7 @@ public class LoginController {
         User user = userRepository.findByEmail(email).orElse(null);
 
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-            return "redirect:/user-list";
+            return "redirect:/users";
         }
         model.addAttribute("error", "Forkert email eller kodeord");
         return "login";
