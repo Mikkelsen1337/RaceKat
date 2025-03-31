@@ -2,6 +2,7 @@ package com.example.racekat.application.controllers;
 
 import com.example.racekat.application.services.UserService;
 import com.example.racekat.domain.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class AuthController {
 
+    @Autowired
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
